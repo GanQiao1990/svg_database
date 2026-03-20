@@ -114,6 +114,16 @@
         </div>
     </section>
 
+    <div class="bg-white rounded-lg p-6 shadow-md mb-8">
+        <strong class="text-lg text-gray-800">服务公告</strong>
+        <ol class="mt-4 space-y-2 text-gray-700">
+            <li><strong>NanoBanana</strong> 已上线：支持图像/多模态相关能力（以你的账号组别开放为准）。</li>
+            <li><strong>OpenAI 兼容接入</strong>：支持 OpenAI 风格 API/SDK 调用（具体接口以平台文档为准）。</li>
+            <li><strong>安全提示</strong>：请在「用户中心」生成 API Key，切勿在前端或公开仓库中暴露密钥。</li>
+            <li><strong>状态查询</strong>：异常时请先查看「服务监控」页面。</li>
+        </ol>
+    </div>
+
     <!-- Overview Section -->
     <section id="overview" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -212,7 +222,7 @@
                                 <pre><code class="language-python">import requests
 
 response = requests.post(
-    "https://api.openai.com/v1/chat/completions",
+    "https://deepresearch2agi.cn/v1/chat/completions",
     headers={
         "Authorization": "Bearer YOUR_API_KEY",
         "Content-Type": "application/json"
@@ -243,7 +253,7 @@ print(result['choices'][0]['message']['content'])</code></pre>
                                 <pre><code class="language-python">import requests
 
 response = requests.post(
-    "https://api.openai.com/v1/chat/completions",
+    "https://deepresearch2agi.cn/v1/chat/completions",
     headers={
         "Authorization": "Bearer YOUR_API_KEY",
         "Content-Type": "application/json"
@@ -335,7 +345,8 @@ for chunk in response:
                                 <pre><code class="language-python">import anthropic
 
 client = anthropic.Anthropic(
-    api_key='YOUR_API_KEY'
+    api_key='YOUR_API_KEY',
+    base_url="https://deepresearch2agi.cn/"
 )
 
 message = client.messages.create(
@@ -361,7 +372,8 @@ print(message.content[0].text)</code></pre>
                                 <pre><code class="language-python">import anthropic
 
 client = anthropic.Anthropic(
-    api_key='YOUR_API_KEY'
+    api_key='YOUR_API_KEY',
+    base_url="https://deepresearch2agi.cn/"
 )
 
 with client.messages.stream(
