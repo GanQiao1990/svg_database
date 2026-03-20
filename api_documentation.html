@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 接入文档 - OpenAI/Gemini/Claude 完整指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .code-block {
+            background: #2d2d2d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .code-header {
+            background: #1e1e1e;
+            padding: 8px 16px;
+            border-bottom: 1px solid #444;
+            color: #fff;
+            font-size: 12px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .api-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .api-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .api-card.active {
+            border-color: #667eea;
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 20px;
+        }
+        .openai-icon { background: linear-gradient(135deg, #10a37f, #00d4aa); color: white; }
+        .gemini-icon { background: linear-gradient(135deg, #4285f4, #34a853); color: white; }
+        .claude-icon { background: linear-gradient(135deg, #d97706, #f59e0b); color: white; }
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        .copy-btn {
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            background-color: #4ade80;
+        }
+        .copy-btn.copied {
+            background-color: #22c55e;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 scroll-smooth">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-code text-2xl text-indigo-600 mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">API 接入文档</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="#overview" class="text-gray-700 hover:text-indigo-600 transition">概览</a>
+                    <a href="#text-api" class="text-gray-700 hover:text-indigo-600 transition">文本 API</a>
+                    <a href="#audio-api" class="text-gray-700 hover:text-indigo-600 transition">音频 API</a>
+                    <a href="#video-api" class="text-gray-700 hover:text-indigo-600 transition">视频 API</a>
+                    <a href="#examples" class="text-gray-700 hover:text-indigo-600 transition">示例代码</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                统一 API 接入指南
+            </h1>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">
+                支持 OpenAI、Google Gemini、Anthropic Claude 等主流大模型，提供文本、音频、视频等多模态接入能力
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="scrollToSection('text-api')" class="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    <i class="fas fa-font mr-2"></i>文本 API
+                </button>
+                <button onclick="scrollToSection('audio-api')" class="bg-white/20 backdrop-blur text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/30 transition border border-white/30">
+                    <i class="fas fa-microphone mr-2"></i>音频 API
+                </button>
+                <button onclick="scrollToSection('video-api')" class="bg-white/20 backdrop-blur text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/30 transition border border-white/30">
+                    <i class="fas fa-video mr-2"></i>视频 API
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">支持的 AI 模型</h2>
+                <p class="text-gray-600">三大主流 AI 平台，统一接入标准</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="api-card bg-gray-50 p-6 rounded-xl cursor-pointer" onclick="showAPIDetails('openai')">
+                    <div class="flex items-center mb-4">
+                        <div class="feature-icon openai-icon mr-3">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">OpenAI</h3>
+                            <p class="text-sm text-gray-600">GPT-4, GPT-3.5, DALL-E</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>文本生成与理解</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>语音转文字 (Whisper)</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>文字转语音 (TTS)</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>图像生成 (DALL-E)</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>函数调用与工具使用</li>
+                    </ul>
+                </div>
+                <div class="api-card bg-gray-50 p-6 rounded-xl cursor-pointer" onclick="showAPIDetails('gemini')">
+                    <div class="flex items-center mb-4">
+                        <div class="feature-icon gemini-icon mr-3">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">Google Gemini</h3>
+                            <p class="text-sm text-gray-600">Gemini Pro, Gemini Vision</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>多模态理解</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>图像分析</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>视频理解</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>音频处理</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>代码生成与理解</li>
+                    </ul>
+                </div>
+                <div class="api-card bg-gray-50 p-6 rounded-xl cursor-pointer" onclick="showAPIDetails('claude')">
+                    <div class="flex items-center mb-4">
+                        <div class="feature-icon claude-icon mr-3">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">Anthropic Claude</h3>
+                            <p class="text-sm text-gray-600">Claude-3, Claude-2</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>长文本处理</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>图像分析</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>代码能力</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>安全对话</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>工具使用能力</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Text API Section -->
+    <section id="text-api" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">文本 API 接入</h2>
+                <p class="text-gray-600">统一的文本生成与理解接口</p>
+            </div>
+
+            <!-- API Tabs -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex space-x-4 mb-6 border-b">
+                    <button onclick="switchTab('text', 'openai')" class="tab-btn px-4 py-2 font-semibold text-indigo-600 border-b-2 border-indigo-600" data-tab="openai">OpenAI</button>
+                    <button onclick="switchTab('text', 'gemini')" class="tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-indigo-600" data-tab="gemini">Gemini</button>
+                    <button onclick="switchTab('text', 'claude')" class="tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-indigo-600" data-tab="claude">Claude</button>
+                </div>
+
+                <!-- OpenAI Text API -->
+                <div id="text-openai" class="tab-content active">
+                    <h3 class="text-xl font-semibold mb-4">OpenAI GPT API</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-2">基础请求格式</h4>
+                            <div class="code-block">
+                                <div class="code-header flex justify-between items-center">
+                                    <span>Python</span>
+                                    <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                        <i class="fas fa-copy"></i> 复制
+                                    </button>
+                                </div>
+                                <pre><code class="language-python">import requests
+
+response = requests.post(
+    "https://api.openai.com/v1/chat/completions",
+    headers={
+        "Authorization": "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json"
+    },
+    json={
+        "model": "gpt-4",
+        "messages": [
+            {"role": "user", "content": "Hello, how are you?"}
+        ],
+        "max_tokens": 1000,
+        "temperature": 0.7
+    }
+)
+
+result = response.json()
+print(result['choices'][0]['message']['content'])</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-2">流式响应</h4>
+                            <div class="code-block">
+                                <div class="code-header flex justify-between items-center">
+                                    <span>Python</span>
+                                    <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                        <i class="fas fa-copy"></i> 复制
+                                    </button>
+                                </div>
+                                <pre><code class="language-python">import requests
+
+response = requests.post(
+    "https://api.openai.com/v1/chat/completions",
+    headers={
+        "Authorization": "Bearer YOUR_API_KEY",
+        "Content-Type": "application/json"
+    },
+    json={
+        "model": "gpt-4",
+        "messages": [
+            {"role": "user", "content": "Tell me a story"}
+        ],
+        "stream": True
+    },
+    stream=True
+)
+
+for line in response.iter_lines():
+    if line:
+        decoded_line = line.decode('utf-8')
+        if decoded_line.startswith('data: '):
+            data = decoded_line[6:]
+            if data != '[DONE]':
+                print(data)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gemini Text API -->
+                <div id="text-gemini" class="tab-content">
+                    <h3 class="text-xl font-semibold mb-4">Google Gemini API</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-2">基础请求格式</h4>
+                            <div class="code-block">
+                                <div class="code-header flex justify-between items-center">
+                                    <span>Python</span>
+                                    <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                        <i class="fas fa-copy"></i> 复制
+                                    </button>
+                                </div>
+                                <pre><code class="language-python">import google.generativeai as genai
+
+genai.configure(api_key='YOUR_API_KEY')
+model = genai.GenerativeModel('gemini-pro')
+
+response = model.generate_content("Hello, how are you?")
+print(response.text)</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-2">流式响应</h4>
+                            <div class="code-block">
+                                <div class="code-header flex justify-between items-center">
+                                    <span>Python</span>
+                                    <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                        <i class="fas fa-copy"></i> 复制
+                                    </button>
+                                </div>
+                                <pre><code class="language-python">import google.generativeai as genai
+
+genai.configure(api_key='YOUR_API_KEY')
+model = genai.GenerativeModel('gemini-pro')
+
+response = model.generate_content(
+    "Tell me a story",
+    stream=True
+)
+
+for chunk in response:
+    print(chunk.text, end="")
+    print()  # New line</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Claude Text API -->
+                <div id="text-claude" class="tab-content">
+                    <h3 class="text-xl font-semibold mb-4">Anthropic Claude API</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold mb-2">基础请求格式</h4>
+                            <div class="code-block">
+                                <div class="code-header flex justify-between items-center">
+                                    <span>Python</span>
+                                    <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                        <i class="fas fa-copy"></i> 复制
+                                    </button>
+                                </div>
+                                <pre><code class="language-python">import anthropic
+
+client = anthropic.Anthropic(
+    api_key='YOUR_API_KEY'
+)
+
+message = client.messages.create(
+    model="claude-3-sonnet-20240229",
+    max_tokens=1000,
+    messages=[
+        {"role": "user", "content": "Hello, how are you?"}
+    ]
+)
+
+print(message.content[0].text)</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-2">流式响应</h4>
+                            <div class="code-block">
+                                <div class="code-header flex justify-between items-center">
+                                    <span>Python</span>
+                                    <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                        <i class="fas fa-copy"></i> 复制
+                                    </button>
+                                </div>
+                                <pre><code class="language-python">import anthropic
+
+client = anthropic.Anthropic(
+    api_key='YOUR_API_KEY'
+)
+
+with client.messages.stream(
+    model="claude-3-sonnet-20240229",
+    max_tokens=1000,
+    messages=[
+        {"role": "user", "content": "Tell me a story"}
+    ]
+) as stream:
+    for text in stream.text_stream:
+        print(text, end="", flush=True)
+    print()  # New line</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Audio API Section -->
+    <section id="audio-api" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">音频 API 接入</h2>
+                <p class="text-gray-600">语音转文字、文字转语音、音频理解</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- OpenAI Audio -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="feature-icon openai-icon mr-3">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">OpenAI Audio</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold mb-2">语音转文字 (Whisper)</h4>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Python</span>
+                                </div>
+                                <pre><code class="language-python">import openai
+
+with open("audio.mp3", "rb") as f:
+    transcript = openai.Audio.transcribe(
+        model="whisper-1",
+        file=f
+    )
+print(transcript.text)</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-2">文字转语音 (TTS)</h4>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Python</span>
+                                </div>
+                                <pre><code class="language-python">import openai
+
+response = openai.Audio.speech.create(
+    model="tts-1",
+    voice="alloy",
+    input="Hello, world!"
+)
+
+# Save to file
+response.stream_to_file("speech.mp3")</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gemini Audio -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="feature-icon gemini-icon mr-3">
+                            <i class="fas fa-headphones"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">Gemini Audio</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold mb-2">音频理解</h4>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Python</span>
+                                </div>
+                                <pre><code class="language-python">import google.generativeai as genai
+
+genai.configure(api_key='YOUR_API_KEY')
+model = genai.GenerativeModel('gemini-pro-vision')
+
+# Upload audio file
+audio_file = genai.upload_file('audio.wav')
+response = model.generate_content([
+    "Describe this audio",
+    audio_file
+])
+print(response.text)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Claude Audio -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="feature-icon claude-icon mr-3">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">Claude Audio</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold mb-2">音频分析</h4>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Python</span>
+                                </div>
+                                <pre><code class="language-python">import anthropic
+
+client = anthropic.Anthropic(
+    api_key='YOUR_API_KEY'
+)
+
+message = client.messages.create(
+    model="claude-3-sonnet-20240229",
+    max_tokens=1000,
+    messages=[
+        {
+            "role": "user", 
+            "content": [
+                {"type": "text", "text": "Describe this audio"},
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "audio/wav",
+                        "data": "base64_encoded_audio_data"
+                    }
+                }
+            ]
+        }
+    ]
+)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video API Section -->
+    <section id="video-api" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">视频 API 接入</h2>
+                <p class="text-gray-600">视频理解、内容分析、场景识别</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Gemini Video -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="feature-icon gemini-icon mr-3">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">Gemini Video</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold mb-2">视频理解</h4>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Python</span>
+                                </div>
+                                <pre><code class="language-python">import google.generativeai as genai
+
+genai.configure(api_key='YOUR_API_KEY')
+model = genai.GenerativeModel('gemini-pro-vision')
+
+# Upload video file
+video_file = genai.upload_file('video.mp4')
+response = model.generate_content([
+    "Describe what's happening in this video",
+    video_file
+])
+print(response.text)</code></pre>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-2">视频帧分析</h4>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Python</span>
+                                </div>
+                                <pre><code class="language-python">import cv2
+import google.generativeai as genai
+
+genai.configure(api_key='YOUR_API_KEY')
+model = genai.GenerativeModel('gemini-pro-vision')
+
+# Extract frames from video
+cap = cv2.VideoCapture('video.mp4')
+frames = []
+for i in range(10):  # Get 10 frames
+    ret, frame = cap.read()
+    if ret:
+        frames.append(frame)
+
+# Analyze frames
+response = model.generate_content([
+    "Analyze these video frames",
+    frames
+])
+print(response.text)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Claude Video -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="feature-icon claude-icon mr-3">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">Claude Video</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold mb-2">视频帧分析</h4>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>Python</span>
+                                </div>
+                                <pre><code class="language-python">import anthropic
+import cv2
+import base64
+
+client = anthropic.Anthropic(
+    api_key='YOUR_API_KEY'
+)
+
+# Extract and encode video frames
+cap = cv2.VideoCapture('video.mp4')
+frames_data = []
+
+for i in range(10):  # Get 10 frames
+    ret, frame = cap.read()
+    if ret:
+        _, buffer = cv2.imencode('.jpg', frame)
+        frame_base64 = base64.b64encode(buffer).decode()
+        frames_data.append({
+            "type": "image",
+            "source": {
+                "type": "base64",
+                "media_type": "image/jpeg",
+                "data": frame_base64
+            }
+        })
+
+message = client.messages.create(
+    model="claude-3-sonnet-20240229",
+    max_tokens=1000,
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "Analyze these video frames"},
+                *frames_data
+            ]
+        }
+    ]
+)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="examples" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">完整示例</h2>
+                <p class="text-gray-600">实际应用场景的完整代码示例</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Multimodal Chat Example -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4">多模态对话系统</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Python - 统一接口封装</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-python">import requests
+import json
+from typing import Dict, Any, Optional
+
+class UnifiedAI:
+    def __init__(self, api_key: str, base_url: str = "https://api.example.com"):
+        self.api_key = api_key
+        self.base_url = base_url
+        self.headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+    
+    def chat(self, 
+             message: str, 
+             model: str = "gpt-4",
+             images: Optional[list] = None,
+             audio: Optional[str] = None,
+             stream: bool = False) -> Dict[str, Any]:
+        """统一的聊天接口，支持文本、图像、音频"""
+        
+        content = [{"type": "text", "text": message}]
+        
+        # 添加图像
+        if images:
+            for img in images:
+                content.append({
+                    "type": "image_url",
+                    "image_url": {"url": img}
+                })
+        
+        # 添加音频
+        if audio:
+            content.append({
+                "type": "audio",
+                "audio": {"data": audio}
+            })
+        
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": content}],
+            "stream": stream
+        }
+        
+        response = requests.post(
+            f"{self.base_url}/v1/chat/completions",
+            headers=self.headers,
+            json=payload,
+            stream=stream
+        )
+        
+        if stream:
+            return response
+        else:
+            return response.json()
+    
+    def transcribe_audio(self, audio_file: str) -> str:
+        """语音转文字"""
+        with open(audio_file, "rb") as f:
+            files = {"file": f}
+            response = requests.post(
+                f"{self.base_url}/v1/audio/transcriptions",
+                headers={"Authorization": f"Bearer {self.api_key}"},
+                files=files,
+                data={"model": "whisper-1"}
+            )
+        return response.json()["text"]
+    
+    def text_to_speech(self, text: str, voice: str = "alloy") -> bytes:
+        """文字转语音"""
+        response = requests.post(
+            f"{self.base_url}/v1/audio/speech",
+            headers=self.headers,
+            json={
+                "model": "tts-1",
+                "voice": voice,
+                "input": text
+            }
+        )
+        return response.content
+
+# 使用示例
+ai = UnifiedAI("your_api_key")
+
+# 文本对话
+response = ai.chat("你好，请介绍一下你自己")
+print(response['choices'][0]['message']['content'])
+
+# 多模态对话
+response = ai.chat(
+    "这张图片里有什么？",
+    images=["https://example.com/image.jpg"]
+)
+
+# 语音转文字
+transcript = ai.transcribe_audio("audio.mp3")
+print(f"转录结果: {transcript}")
+
+# 文字转语音
+speech = ai.text_to_speech("你好，世界！")
+with open("output.mp3", "wb") as f:
+    f.write(speech)</code></pre>
+                    </div>
+                </div>
+
+                <!-- Real-time Processing Example -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4">实时音视频处理</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Python - WebSocket 实时处理</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-python">import asyncio
+import websockets
+import json
+import base64
+from typing import AsyncGenerator
+
+class RealTimeAI:
+    def __init__(self, api_key: str, ws_url: str = "wss://api.example.com/ws"):
+        self.api_key = api_key
+        self.ws_url = ws_url
+    
+    async def stream_audio_processing(self, audio_stream: AsyncGenerator) -> AsyncGenerator:
+        """实时音频流处理"""
+        async with websockets.connect(f"{self.ws_url}?token={self.api_key}") as websocket:
+            # 发送配置
+            await websocket.send(json.dumps({
+                "type": "config",
+                "model": "whisper-1",
+                "language": "zh"
+            }))
+            
+            async for audio_chunk in audio_stream:
+                # 发送音频数据
+                await websocket.send(json.dumps({
+                    "type": "audio",
+                    "data": base64.b64encode(audio_chunk).decode()
+                }))
+                
+                # 接收转录结果
+                response = await websocket.recv()
+                result = json.loads(response)
+                
+                if result.get("type") == "transcription":
+                    yield result["text"]
+    
+    async def stream_video_analysis(self, frame_stream: AsyncGenerator) -> AsyncGenerator:
+        """实时视频流分析"""
+        async with websockets.connect(f"{self.ws_url}?token={self.api_key}") as websocket:
+            await websocket.send(json.dumps({
+                "type": "config",
+                "model": "gemini-pro-vision",
+                "analysis_type": "object_detection"
+            }))
+            
+            async for frame in frame_stream:
+                await websocket.send(json.dumps({
+                    "type": "frame",
+                    "data": base64.b64encode(frame).decode()
+                }))
+                
+                response = await websocket.recv()
+                result = json.loads(response)
+                
+                if result.get("type") == "analysis":
+                    yield result["objects"]
+
+# 使用示例
+async def main():
+    rt_ai = RealTimeAI("your_api_key")
+    
+    # 模拟音频流
+    async def mock_audio_stream():
+        for i in range(10):
+            yield b"mock_audio_data_" + str(i).encode()
+            await asyncio.sleep(0.1)
+    
+    # 实时转录
+    async for text in rt_ai.stream_audio_processing(mock_audio_stream()):
+        print(f"转录: {text}")
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold mb-4">开始使用</h3>
+                <p class="text-gray-400 mb-6">立即接入三大 AI 平台，开启智能应用开发</p>
+                <div class="flex justify-center space-x-4">
+                    <button class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                        <i class="fas fa-rocket mr-2"></i>立即开始
+                    </button>
+                    <button class="border border-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition">
+                        <i class="fas fa-book mr-2"></i>查看更多文档
+                    </button>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 AI API Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(section, tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll(`#${section}-${section} .tab-content`);
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Show selected tab content
+            const selectedContent = document.getElementById(`${section}-${tabName}`);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+            
+            // Update tab buttons
+            const buttons = document.querySelectorAll(`#${section}-${section} .tab-btn`);
+            buttons.forEach(btn => {
+                btn.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600');
+                btn.classList.add('text-gray-600');
+            });
+            
+            const activeBtn = document.querySelector(`#${section}-${section} .tab-btn[data-tab="${tabName}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-600');
+                activeBtn.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600');
+            }
+        }
+
+        // API card selection
+        function showAPIDetails(apiName) {
+            const cards = document.querySelectorAll('.api-card');
+            cards.forEach(card => card.classList.remove('active'));
+            
+            event.currentTarget.classList.add('active');
+            
+            // Scroll to relevant section
+            setTimeout(() => {
+                document.getElementById('text-api').scrollIntoView({ behavior: 'smooth' });
+                switchTab('text', apiName);
+            }, 300);
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('code').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Smooth scroll to section
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling to navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Add scroll effect to navigation
+            window.addEventListener('scroll', function() {
+                const nav = document.querySelector('nav');
+                if (window.scrollY > 50) {
+                    nav.classList.add('shadow-xl');
+                } else {
+                    nav.classList.remove('shadow-xl');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

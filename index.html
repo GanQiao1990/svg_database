@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM API 接入平台 - 一站式大模型API服务</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-text-red {
+            background: linear-gradient(to right, #fca5a5, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-red-dark {
+            background: linear-gradient(to right, #f87171, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-robot text-2xl text-indigo-600 mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">LLM API Platform</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/account/profile" class="text-gray-700 hover:text-indigo-600 transition">用户中心</a>
+                    <a href="https://gcnbfxozhlxf.feishu.cn/wiki/VjgQwiOnBiHgi0kvSGSc2pl1nlg" target="_blank" class="text-gray-700 hover:text-indigo-600 transition">接入文档</a>
+                    <a href="https://uptime.gptnb.ai/status/llm" target="_blank" class="text-gray-700 hover:text-indigo-600 transition">服务监控</a>
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        开始使用
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="float-animation">
+                <i class="fas fa-cloud text-6xl mb-6 opacity-80"></i>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                基于 <span class="gradient-text-red">官方 API</span> 的统一接入与中转服务
+            </h1>
+            <p class="text-xl md:text-2xl mb-8">
+                面向生产环境的 <span class="gradient-text-red-dark">高性能・高可用・高并发</span>
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/account/profile" class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition transform hover:scale-105">
+                    <i class="fas fa-user mr-2"></i>用户中心
+                </a>
+                <a href="https://gcnbfxozhlxf.feishu.cn/wiki/VjgQwiOnBiHgi0kvSGSc2pl1nlg" target="_blank" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-600 transition transform hover:scale-105">
+                    <i class="fas fa-book mr-2"></i>接入文档
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Description Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">平台特色</h2>
+                <p class="text-gray-600">面向团队与开发者的一站式大模型 API 接入平台</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card-hover bg-gray-50 p-6 rounded-xl">
+                    <i class="fas fa-plug text-3xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">兼容多模型</h3>
+                    <p class="text-gray-600">兼容 OpenAI 全模型，同时支持多家国产与主流大模型</p>
+                </div>
+                <div class="card-hover bg-gray-50 p-6 rounded-xl">
+                    <i class="fas fa-shield-alt text-3xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">统一管理</h3>
+                    <p class="text-gray-600">统一鉴权、计费与配额管理，便于企业级运维与审计</p>
+                </div>
+                <div class="card-hover bg-gray-50 p-6 rounded-xl">
+                    <i class="fas fa-stream text-3xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">稳定输出</h3>
+                    <p class="text-gray-600">提供稳定的流式输出、重试与超时控制策略</p>
+                </div>
+                <div class="card-hover bg-gray-50 p-6 rounded-xl">
+                    <i class="fas fa-chart-line text-3xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">监控告警</h3>
+                    <p class="text-gray-600">内置用量统计与告警能力，快速定位性能与可用性问题</p>
+                </div>
+                <div class="card-hover bg-gray-50 p-6 rounded-xl">
+                    <i class="fas fa-dollar-sign text-3xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">成本优化</h3>
+                    <p class="text-gray-600">帮助你以更低的接入成本，获得更稳定的在线服务体验</p>
+                </div>
+                <div class="card-hover bg-gray-50 p-6 rounded-xl">
+                    <i class="fas fa-users text-3xl text-indigo-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">团队协作</h3>
+                    <p class="text-gray-600">面向团队与开发者，提供完整的协作与管理功能</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Data Section -->
+    <section class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">服务数据</h2>
+                <p class="text-gray-600">实时统计，展现平台实力</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <i class="fas fa-chart-bar text-4xl text-indigo-600 mb-4"></i>
+                        <div class="text-3xl font-bold text-indigo-600 mb-2">100K+</div>
+                        <div class="text-gray-600">日 API 调用量</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <i class="fas fa-brain text-4xl text-indigo-600 mb-4"></i>
+                        <div class="text-3xl font-bold text-indigo-600 mb-2">100+</div>
+                        <div class="text-gray-600">可用模型数量</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <i class="fas fa-users text-4xl text-indigo-600 mb-4"></i>
+                        <div class="text-3xl font-bold text-indigo-600 mb-2">120K+</div>
+                        <div class="text-gray-600">注册用户数</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Price Data Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">价格倍率</h2>
+                <p class="text-gray-600">透明的价格体系，灵活的计费方案</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-lg shadow-lg">
+                    <thead class="bg-indigo-600 text-white">
+                        <tr>
+                            <th class="px-6 py-3 text-left">用户组</th>
+                            <th class="px-6 py-3 text-left">倍率</th>
+                            <th class="px-6 py-3 text-left">说明</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">默认用户组</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded">2×</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">新注册用户</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">VIP 用户组</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded">1.7×</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">累计充值满 500 USD</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">CN 模型分组</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded">1.7×</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">令牌分组设置</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">原价分组</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">8.5×</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">令牌分组设置</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">Azure 分组</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded">1×</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">令牌分组设置</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">仅 API 分组</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded">1×</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">令牌分组设置</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium">仅 MJ 分组</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded">1×</span>
+                            </td>
+                            <td class="px-6 py-4 text-gray-600">令牌分组设置</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">常见问题</h2>
+                <p class="text-gray-600">解答您的疑问，帮助您更好地使用平台</p>
+            </div>
+            <div class="space-y-6 max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-indigo-600">
+                        <i class="fas fa-question-circle mr-2"></i>网站如何计算费用？
+                    </h3>
+                    <p class="text-gray-600">
+                        本站基于模型分词结果进行计费。对流式请求，由于接口可能不会实时返回消耗量，服务器会使用 Tokenizer，并根据不同模型选择对应编码器（例如 gpt-3.5 / gpt-4 系列使用 cl100k_base；text-davinci-003 使用 p50k_base）进行精确估算。计费时会分别统计输入与输出 token，并按对应倍率扣费；对非流式请求，则以接口返回的 usage 为准。
+                    </p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-indigo-600">
+                        <i class="fas fa-question-circle mr-2"></i>为什么余额可能出现负数？余额为负会怎样？
+                    </h3>
+                    <p class="text-gray-600">
+                        由于模型输出长度无法完全预估，在极少数情况下可能出现余额短暂为负的情况。余额为 0 或负数时，系统会通知你并限制部分服务（包括部分网页功能与 API 调用）。建议及时充值以恢复正常使用。
+                    </p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-indigo-600">
+                        <i class="fas fa-question-circle mr-2"></i>什么是 VIP（合作用户）？如何升级？
+                    </h3>
+                    <p class="text-gray-600">
+                        VIP（合作用户）用于提供更稳定的资源保障与更优的充值/计费倍率。你当前用户等级为 default；当累计充值达到 500 USD 后，可联系管理员升级为 VIP。VIP 用户通常享有更宽松的速率限制与更优先的模型资源。
+                    </p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-indigo-600">
+                        <i class="fas fa-question-circle mr-2"></i>什么是专线（Direct - 直连）？
+                    </h3>
+                    <p class="text-gray-600">
+                        Direct 专线面向用量稳定的团队用户。开通后你将独占直连线路，不与其他用户共享 RPM，以获得更稳定的吞吐与更确定的延迟表现。具体开通门槛与方案请联系客户支持。
+                    </p>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold mb-3 text-indigo-600">
+                        <i class="fas fa-question-circle mr-2"></i>如何开票？
+                    </h3>
+                    <p class="text-gray-600">
+                        支持开票。充值金额计入账户余额；如需开票将另加税点 1%。请联系客户支持获取流程与材料清单。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-robot text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">LLM API Platform</span>
+                    </div>
+                    <p class="text-gray-400">一站式大模型API接入平台，为开发者和企业提供稳定、高效的AI服务。</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">快速链接</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/account/profile" class="hover:text-white transition">用户中心</a></li>
+                        <li><a href="https://gcnbfxozhlxf.feishu.cn/wiki/VjgQwiOnBiHgi0kvSGSc2pl1nlg" target="_blank" class="hover:text-white transition">接入文档</a></li>
+                        <li><a href="https://uptime.gptnb.ai/status/llm" target="_blank" class="hover:text-white transition">服务监控</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">支持</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">帮助中心</a></li>
+                        <li><a href="#" class="hover:text-white transition">联系我们</a></li>
+                        <li><a href="#" class="hover:text-white transition">技术支持</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">关于</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">关于我们</a></li>
+                        <li><a href="#" class="hover:text-white transition">服务条款</a></li>
+                        <li><a href="#" class="hover:text-white transition">隐私政策</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 LLM API Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-xl');
+            } else {
+                nav.classList.remove('shadow-xl');
+            }
+        });
+    </script>
+</body>
+</html>
