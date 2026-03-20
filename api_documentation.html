@@ -873,6 +873,692 @@ if __name__ == "__main__":
         </div>
     </section>
 
+    <!-- Comprehensive Code Examples Section -->
+    <section id="code-examples" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">完整代码示例</h2>
+                <p class="text-gray-600">覆盖 OpenAI 兼容调用格式、非流/流式请求与图片输入场景</p>
+            </div>
+
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-6 mb-8">
+                <div class="mb-5">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">API 格式</h3>
+                    <div class="flex flex-wrap gap-2 text-sm">
+                        <span class="px-3 py-1 rounded-full bg-indigo-600 text-white">OpenAI Chat</span>
+                        <span class="px-3 py-1 rounded-full bg-white text-gray-700 border">OpenAI Responses</span>
+                        <span class="px-3 py-1 rounded-full bg-white text-gray-700 border">Anthropic Messages</span>
+                        <span class="px-3 py-1 rounded-full bg-white text-gray-700 border">Google GenerateContent</span>
+                        <span class="px-3 py-1 rounded-full bg-white text-gray-700 border">Rerank</span>
+                        <span class="px-3 py-1 rounded-full bg-white text-gray-700 border">OpenAI Images</span>
+                        <span class="px-3 py-1 rounded-full bg-white text-gray-700 border">OpenAI Image Edit</span>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4 text-sm text-gray-700">
+                    <div class="bg-white rounded-lg p-4 border">
+                        <div class="font-semibold text-gray-800 mb-2">正常拨测</div>
+                        <div>默认示例采用 `gpt-4o-mini` 作为基础模型，便于快速验证联通性与返回格式。</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border">
+                        <div class="font-semibold text-gray-800 mb-2">非流 / 流式</div>
+                        <div>示例同时展示标准非流式返回与 `stream=true` 的流式输出处理方式。</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border">
+                        <div class="font-semibold text-gray-800 mb-2">图片输入</div>
+                        <div>图片输入建议走 OpenAI Chat 兼容格式，在 `messages[].content` 中传入文本与 `image_url` 对象。</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Language Selector -->
+            <div class="bg-gray-50 rounded-xl p-6 mb-8">
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <button onclick="switchLanguage('curl')" class="lang-btn px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold" data-lang="curl">Curl</button>
+                    <button onclick="switchLanguage('python-sdk')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="python-sdk">Python (SDK)</button>
+                    <button onclick="switchLanguage('python-requests')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="python-requests">Python (requests)</button>
+                    <button onclick="switchLanguage('nodejs')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="nodejs">Node.js</button>
+                    <button onclick="switchLanguage('java')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="java">Java</button>
+                    <button onclick="switchLanguage('csharp')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="csharp">C#</button>
+                    <button onclick="switchLanguage('ruby')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="ruby">Ruby</button>
+                    <button onclick="switchLanguage('go')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="go">Go</button>
+                    <button onclick="switchLanguage('php')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="php">PHP</button>
+                    <button onclick="switchLanguage('rust')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="rust">Rust</button>
+                    <button onclick="switchLanguage('cpp')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="cpp">C/C++</button>
+                    <button onclick="switchLanguage('dart')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="dart">Dart</button>
+                    <button onclick="switchLanguage('autojs')" class="lang-btn px-4 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300" data-lang="autojs">AutoJS</button>
+                </div>
+
+                <div class="mb-6 text-sm text-gray-600 bg-white border rounded-lg p-4">
+                    所有示例中的密钥均使用占位符 `YOUR_API_KEY`。请在运行前从用户中心生成自己的 Key，切勿把真实密钥写入网页、前端代码或公开仓库。
+                </div>
+
+                <!-- Curl Example -->
+                <div id="lang-curl" class="lang-content">
+                    <h3 class="text-xl font-semibold mb-4">Curl - 非流式请求</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>gpt-4o-mini (非流式)</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">curl https://deepresearch2agi.cn/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "stream": false,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant."
+      },
+      {
+        "role": "user",
+        "content": "Hello!"
+      }
+    ]
+  }'</code></pre>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4 mt-6">Curl - 流式请求</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>gpt-4o-mini (流式)</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">curl https://deepresearch2agi.cn/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "stream": true,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tell me a story"
+      }
+    ]
+  }'</code></pre>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4 mt-6">Curl - 图片输入</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>gpt-4o-mini (图片输入)</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">curl https://deepresearch2agi.cn/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "gpt-4o-mini",
+    "stream": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Describe this image"
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "https://example.com/demo-image.png"
+            }
+          }
+        ]
+      }
+    ]
+  }'</code></pre>
+                    </div>
+                </div>
+
+                <!-- Python SDK Example -->
+                <div id="lang-python-sdk" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">Python SDK - OpenAI 官方库</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Python</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-python">from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://deepresearch2agi.cn/v1"
+)
+
+# 非流式请求
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+)
+print(response.choices[0].message.content)
+
+# 流式请求
+stream = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Tell me a story"}],
+    stream=True
+)
+
+for chunk in stream:
+    if chunk.choices[0].delta.content:
+        print(chunk.choices[0].delta.content, end="")</code></pre>
+                    </div>
+                </div>
+
+                <!-- Python requests Example -->
+                <div id="lang-python-requests" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">Python requests 库</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Python</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-python">import requests
+import json
+
+url = "https://deepresearch2agi.cn/v1/chat/completions"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer YOUR_API_KEY"
+}
+
+# 非流式请求
+data = {
+    "model": "gpt-4o-mini",
+    "stream": False,
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+}
+
+response = requests.post(url, headers=headers, json=data)
+result = response.json()
+print(result['choices'][0]['message']['content'])
+
+# 流式请求
+data["stream"] = True
+response = requests.post(url, headers=headers, json=data, stream=True)
+
+for line in response.iter_lines():
+    if line:
+        decoded = line.decode('utf-8')
+        if decoded.startswith('data: '):
+            if decoded[6:] != '[DONE]':
+                chunk = json.loads(decoded[6:])
+                if 'choices' in chunk and chunk['choices'][0]['delta'].get('content'):
+                    print(chunk['choices'][0]['delta']['content'], end='')</code></pre>
+                    </div>
+                </div>
+
+                <!-- Node.js Example -->
+                <div id="lang-nodejs" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">Node.js - OpenAI SDK</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>JavaScript</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-javascript">import OpenAI from 'openai';
+
+const client = new OpenAI({
+    apiKey: 'YOUR_API_KEY',
+    baseURL: 'https://deepresearch2agi.cn/v1'
+});
+
+// 非流式请求
+async function chat() {
+    const response = await client.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+            { role: 'system', content: 'You are a helpful assistant.' },
+            { role: 'user', content: 'Hello!' }
+        ]
+    });
+    console.log(response.choices[0].message.content);
+}
+
+// 流式请求
+async function chatStream() {
+    const stream = await client.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: 'Tell me a story' }],
+        stream: true
+    });
+
+    for await (const chunk of stream) {
+        process.stdout.write(chunk.choices[0]?.delta?.content || '');
+    }
+}
+
+chat();
+chatStream();</code></pre>
+                    </div>
+                </div>
+
+                <!-- Java Example -->
+                <div id="lang-java" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">Java - OkHttp</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Java</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-java">import okhttp3.*;
+import org.json.JSONObject;
+import org.json.JSONArray;
+
+public class OpenAIClient {
+    private static final String API_KEY = "YOUR_API_KEY";
+    private static final String BASE_URL = "https://deepresearch2agi.cn/v1/chat/completions";
+
+    public static void main(String[] args) throws Exception {
+        OkHttpClient client = new OkHttpClient();
+
+        JSONObject message1 = new JSONObject()
+            .put("role", "system")
+            .put("content", "You are a helpful assistant.");
+        
+        JSONObject message2 = new JSONObject()
+            .put("role", "user")
+            .put("content", "Hello!");
+
+        JSONArray messages = new JSONArray()
+            .put(message1)
+            .put(message2);
+
+        JSONObject requestBody = new JSONObject()
+            .put("model", "gpt-4o-mini")
+            .put("stream", false)
+            .put("messages", messages);
+
+        RequestBody body = RequestBody.create(
+            requestBody.toString(),
+            MediaType.parse("application/json")
+        );
+
+        Request request = new Request.Builder()
+            .url(BASE_URL)
+            .addHeader("Authorization", "Bearer " + API_KEY)
+            .addHeader("Content-Type", "application/json")
+            .post(body)
+            .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            String responseBody = response.body().string();
+            JSONObject jsonResponse = new JSONObject(responseBody);
+            String content = jsonResponse
+                .getJSONArray("choices")
+                .getJSONObject(0)
+                .getJSONObject("message")
+                .getString("content");
+            System.out.println(content);
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- C# Example -->
+                <div id="lang-csharp" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">C# - HttpClient</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>C#</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-csharp">using System;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+class Program
+{
+    private static readonly string ApiKey = "YOUR_API_KEY";
+    private static readonly string BaseUrl = "https://deepresearch2agi.cn/v1/chat/completions";
+
+    static async Task Main(string[] args)
+    {
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {ApiKey}");
+
+        var requestBody = new
+        {
+            model = "gpt-4o-mini",
+            stream = false,
+            messages = new[]
+            {
+                new { role = "system", content = "You are a helpful assistant." },
+                new { role = "user", content = "Hello!" }
+            }
+        };
+
+        var json = JsonSerializer.Serialize(requestBody);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync(BaseUrl, content);
+        var responseString = await response.Content.ReadAsStringAsync();
+        
+        using var doc = JsonDocument.Parse(responseString);
+        var messageContent = doc.RootElement
+            .GetProperty("choices")[0]
+            .GetProperty("message")
+            .GetProperty("content")
+            .GetString();
+        
+        Console.WriteLine(messageContent);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Go Example -->
+                <div id="lang-go" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">Go - net/http</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Go</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-go">package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+)
+
+const (
+    apiKey  = "YOUR_API_KEY"
+    baseURL = "https://deepresearch2agi.cn/v1/chat/completions"
+)
+
+type Message struct {
+    Role    string `json:"role"`
+    Content string `json:"content"`
+}
+
+type Request struct {
+    Model    string    `json:"model"`
+    Stream   bool      `json:"stream"`
+    Messages []Message `json:"messages"`
+}
+
+func main() {
+    reqBody := Request{
+        Model:  "gpt-4o-mini",
+        Stream: false,
+        Messages: []Message{
+            {Role: "system", Content: "You are a helpful assistant."},
+            {Role: "user", Content: "Hello!"},
+        },
+    }
+
+    jsonData, _ := json.Marshal(reqBody)
+    
+    req, _ := http.NewRequest("POST", baseURL, bytes.NewBuffer(jsonData))
+    req.Header.Set("Content-Type", "application/json")
+    req.Header.Set("Authorization", "Bearer "+apiKey)
+
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+
+    body, _ := ioutil.ReadAll(resp.Body)
+    fmt.Println(string(body))
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- PHP Example -->
+                <div id="lang-php" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">PHP - cURL</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>PHP</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-php"><?php
+
+$apiKey = "YOUR_API_KEY";
+$baseUrl = "https://deepresearch2agi.cn/v1/chat/completions";
+
+$data = [
+    "model" => "gpt-4o-mini",
+    "stream" => false,
+    "messages" => [
+        ["role" => "system", "content" => "You are a helpful assistant."],
+        ["role" => "user", "content" => "Hello!"]
+    ]
+];
+
+$ch = curl_init($baseUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Content-Type: application/json",
+    "Authorization: Bearer " . $apiKey
+]);
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+$result = json_decode($response, true);
+echo $result['choices'][0]['message']['content'];
+
+?></code></pre>
+                    </div>
+                </div>
+
+                <!-- Ruby Example -->
+                <div id="lang-ruby" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">Ruby - Net::HTTP</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Ruby</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-ruby">require 'net/http'
+require 'json'
+
+uri = URI('https://deepresearch2agi.cn/v1/chat/completions')
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(uri)
+request['Content-Type'] = 'application/json'
+request['Authorization'] = 'Bearer YOUR_API_KEY'
+request.body = {
+  model: 'gpt-4o-mini',
+  stream: false,
+  messages: [
+    { role: 'system', content: 'You are a helpful assistant.' },
+    { role: 'user', content: 'Hello!' }
+  ]
+}.to_json
+
+response = http.request(request)
+puts JSON.parse(response.body)['choices'][0]['message']['content']</code></pre>
+                    </div>
+                </div>
+
+                <!-- Rust Example -->
+                <div id="lang-rust" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">Rust - reqwest</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Rust</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-rust">use reqwest::Client;
+use serde_json::json;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new();
+    let body = json!({
+        "model": "gpt-4o-mini",
+        "stream": false,
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Hello!"}
+        ]
+    });
+
+    let response = client
+        .post("https://deepresearch2agi.cn/v1/chat/completions")
+        .bearer_auth("YOUR_API_KEY")
+        .json(&body)
+        .send()
+        .await?;
+
+    println!("{}", response.text().await?);
+    Ok(())
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- C/C++ Example -->
+                <div id="lang-cpp" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">C/C++ - libcurl</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>C/C++</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-cpp">#include <curl/curl.h>
+
+int main() {
+    CURL *curl = curl_easy_init();
+    if (curl) {
+        struct curl_slist *headers = NULL;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+        headers = curl_slist_append(headers, "Authorization: Bearer YOUR_API_KEY");
+
+        const char *payload = "{\"model\":\"gpt-4o-mini\",\"stream\":false,\"messages\":[{\"role\":\"system\",\"content\":\"You are a helpful assistant.\"},{\"role\":\"user\",\"content\":\"Hello!\"}]}";
+
+        curl_easy_setopt(curl, CURLOPT_URL, "https://deepresearch2agi.cn/v1/chat/completions");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload);
+        curl_easy_perform(curl);
+
+        curl_slist_free_all(headers);
+        curl_easy_cleanup(curl);
+    }
+    return 0;
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Dart Example -->
+                <div id="lang-dart" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">Dart - http</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>Dart</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-dart">import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Future<void> main() async {
+  final response = await http.post(
+    Uri.parse('https://deepresearch2agi.cn/v1/chat/completions'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer YOUR_API_KEY',
+    },
+    body: jsonEncode({
+      'model': 'gpt-4o-mini',
+      'stream': false,
+      'messages': [
+        {'role': 'system', 'content': 'You are a helpful assistant.'},
+        {'role': 'user', 'content': 'Hello!'}
+      ]
+    }),
+  );
+
+  print(response.body);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- AutoJS Example -->
+                <div id="lang-autojs" class="lang-content" style="display:none;">
+                    <h3 class="text-xl font-semibold mb-4">AutoJS - HTTP Post</h3>
+                    <div class="code-block">
+                        <div class="code-header flex justify-between items-center">
+                            <span>AutoJS</span>
+                            <button onclick="copyCode(this)" class="copy-btn bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                        </div>
+                        <pre><code class="language-javascript">var url = 'https://deepresearch2agi.cn/v1/chat/completions';
+var headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_API_KEY'
+};
+
+var data = {
+    model: 'gpt-4o-mini',
+    stream: false,
+    messages: [
+        { role: 'system', content: 'You are a helpful assistant.' },
+        { role: 'user', content: 'Hello!' }
+    ]
+};
+
+var res = http.postJson(url, data, {
+    headers: headers
+});
+log(res.body.string());</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -918,6 +1604,30 @@ if __name__ == "__main__":
             if (activeBtn) {
                 activeBtn.classList.remove('text-gray-600');
                 activeBtn.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600');
+            }
+        }
+
+        function switchLanguage(langName) {
+            const contents = document.querySelectorAll('.lang-content');
+            contents.forEach(content => {
+                content.style.display = 'none';
+            });
+
+            const target = document.getElementById(`lang-${langName}`);
+            if (target) {
+                target.style.display = 'block';
+            }
+
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+
+            const activeBtn = document.querySelector(`.lang-btn[data-lang="${langName}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                activeBtn.classList.add('bg-indigo-600', 'text-white');
             }
         }
 
