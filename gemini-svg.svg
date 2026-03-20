@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="150" viewBox="0 0 300 150">
+  <defs>
+    <linearGradient id="research_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#34495e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7f8c8d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="agi_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2980b9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8e44ad;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <text x="50%" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="url(#research_gradient)">
+    deep<tspan font-weight="normal">research</tspan><tspan fill="#34495e">2</tspan>
+  </text>
+  
+  <text x="50%" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="url(#agi_gradient)">
+    agi
+  </text>
+  
+  <line x1="140" y1="130" x2="160" y2="130" stroke="url(#agi_gradient)" stroke-width="3" />
+</svg>
