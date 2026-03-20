@@ -1,11 +1,13 @@
 name: Deploy to GitHub Pages
 
 # Updated to ensure latest content is deployed
+# 中文说明：只有 main 分支发生推送时，才触发 GitHub Pages 部署。
 
 on:
   push:
     branches: [ main ]
 
+# 中文说明：如果连续提交多个版本，只保留最后一次部署，避免重复构建。
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -24,17 +26,21 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
+    # 中文说明：检出仓库内容
     - name: Checkout
       uses: actions/checkout@v4
       
+    # 中文说明：初始化 GitHub Pages 部署环境
     - name: Setup Pages
       uses: actions/configure-pages@v4
       
+    # 中文说明：上传当前仓库内容作为 Pages 发布产物
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
         path: '.'
         
+    # 中文说明：发布到 GitHub Pages
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
